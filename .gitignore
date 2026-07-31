@@ -1,0 +1,13 @@
+# # The classics
+.DS_Store
+*.log
+tmp/
+
+# Tex build
+.auctex-auto/
+*.log
+*.out
+*.aux
+*.blg
+*.bbl
+*.brf
