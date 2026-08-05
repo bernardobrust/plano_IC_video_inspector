@@ -123,7 +123,7 @@ Os objetivos específicos incluem:
 
 A figura~\ref{fig:statistics_crop} apresenta um possível produto da ferramenta. Os vetores apresentados indicam uma diferença no comportamento da luz entre o quadro anterior e o atual. Tal campo vetorial é de suma importância para visualização aplicada à reconstrução 3D.
 
-\section{Metodologia e Principais Atividades}
+\section{Principais Atividades e Metodologia}
 
 A execução do projeto será dividida nas seguintes etapas:
 
@@ -137,6 +137,8 @@ A execução do projeto será dividida nas seguintes etapas:
     \item \textbf{Documentação e Publicação:} Disponibilização do código-fonte em repositório público, acompanhado de estudos de caso e guias de integração.
 \end{itemize}
 
+As etapas serão conduzidas de forma incremental. Inicialmente, será construída uma versão mínima capaz de abrir um arquivo AV1, decodificar seus quadros e apresentá-los na ordem temporal correta. Sobre essa base, serão incorporados os mecanismos de inspeção e as camadas de dados auxiliares. A cada incremento, serão utilizados vídeos curtos e controlados para verificar a coerência entre os dados extraídos, a imagem apresentada e a interação oferecida pela ferramenta. Essa estratégia permite isolar problemas de decodificação, sincronização e visualização antes da realização dos experimentos de análise de movimento.
+
 \subsection{Integração com a API do FFmpeg}
 
 A integração será feita diretamente com as bibliotecas \texttt{libavformat}, \texttt{libavcodec} e \texttt{libavutil}, em vez de invocar o executável \texttt{ffmpeg} como processo externo. Essa decisão permite que o visualizador controle o fluxo de pacotes e quadros na memória, preserve metadados por quadro e se integre à interface gráfica sem arquivos intermediários. A \texttt{libavformat} identifica o contêiner e realiza o \emph{demuxing}; a \texttt{libavcodec} seleciona e executa o decodificador AV1; e a \texttt{libavutil} fornece estruturas, opções e rotinas auxiliares compartilhadas~\cite{ffmpeg}.
@@ -148,6 +150,20 @@ Cada \texttt{AVFrame} será tratado como uma imagem planar YUV, e não como um v
 A sincronização será baseada no \texttt{PTS} do quadro, convertido da \emph{time base} do fluxo para uma unidade comum. Essa escolha permite reprodução correta em taxas de quadro variáveis e em vídeos com ordem de decodificação distinta da ordem de apresentação. A ferramenta também manterá o índice sequencial de decodificação, pois ele é útil para depuração, mas não o confundirá com o tempo de apresentação.
 
 Para a extração de movimento, a implementação verificará os \emph{side data} associados ao \texttt{AVFrame}, em particular \texttt{AV\_FRAME\_DATA\_MOTION\_VECTORS}. Os registros de movimento serão convertidos para uma estrutura própria que armazene posição e dimensões do bloco, deslocamento, referência e \texttt{PTS}. Os outros dados relacionados a compressão podem ser extraídos de forma similar.
+
+\subsection{Protocolo de avaliação}
+
+Os experimentos utilizarão vídeos AV1 com diferentes resoluções, taxas de quadro, níveis de quantização e padrões de movimento. Serão incluídas sequências com deslocamentos predominantemente translacionais, movimentos de câmera, oclusões, bordas bem definidas e regiões de baixa textura. Para cada vídeo, serão preservados os parâmetros de codificação, a ordem de apresentação dos quadros e as referências empregadas, de modo que os resultados possam ser reproduzidos e interpretados em função das decisões do \emph{codec}.
+
+Os vetores extraídos serão visualizados sobre os quadros de origem e comparados, quando aplicável, com estimativas produzidas por métodos de \emph{optical flow} e \emph{SfM}. A comparação considerará a direção e a magnitude dos deslocamentos, a continuidade espacial do campo vetorial, a cobertura dos blocos e o comportamento nas regiões em que a predição temporal é menos confiável. Como os vetores de movimento do AV1 são produzidos para fins de compressão, a avaliação será qualitativa e quantitativa, buscando identificar condições em que eles constituem uma aproximação útil para tarefas de visão computacional, e não uma medida exata do movimento físico~\cite{av1motion,computer_vision}.
+
+Também serão avaliados o tempo de abertura do arquivo, a taxa de decodificação, o consumo de memória e a responsividade das operações de inspeção. Os testes de desempenho serão executados com configurações de entrada registradas, permitindo distinguir limitações da implementação de limitações inerentes à resolução, à profundidade de bits ou à estrutura de predição do vídeo.
+
+\subsection{Validação e resultados esperados}
+
+A validação funcional verificará se a ferramenta apresenta os quadros segundo seus \texttt{PTS}, permite navegação quadro a quadro e mantém a correspondência entre cada sobreposição e o quadro ao qual ela pertence. Serão incluídos testes automatizados para rotinas de leitura de metadados, conversão de coordenadas, tratamento de referências e ordenação temporal. Casos sem vetores disponíveis ou com formatos de croma distintos deverão ser tratados explicitamente, sem comprometer a reprodução do vídeo.
+
+Como resultado, espera-se obter um visualizador reutilizável para inspeção de vídeos AV1 e um conjunto documentado de procedimentos para extrair e analisar seus dados auxiliares. Os resultados experimentais indicarão tanto as situações em que os vetores de movimento podem apoiar aplicações de reconstrução e análise geométrica quanto suas limitações em cenas com oclusões, baixa textura ou movimentos complexos. O código, os vídeos de teste permitidos para distribuição e a documentação de uso serão organizados para facilitar sua integração em investigações futuras do laboratório.
 
 \section{Cronograma}
 
