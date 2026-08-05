@@ -34,6 +34,22 @@
 \begin{document}\hypersetup{pageanchor=false}\input{titlepage2}\hypersetup{pageanchor=true}
 \onehalfspacing
 
+\providecommand{\keywords}[1]
+{
+  \small
+  \textbf{\textit{Palavras-chave---}} #1
+}
+
+\providecommand{\areaname}[1]
+{
+  \small
+  \textbf{\textit{Nome da área, subárea e especialidade---}} #1
+}
+
+\areaname{Computação}
+
+\keywords{Processamento de Vídeo, Visão Computacional, Software Livre}
+
 \section{Introdução e Justificativa}
 
 O presente plano de pesquisa refere-se a atividades propostas para a Iniciação Científica (IC), a serem realizadas no Laboratório de Visualização do Instituto Politécnico (IPRJ) da UERJ, vinculado ao Departamento de Modelagem Computacional (DMC). O objetivo central é expandir o escopo de pesquisa do laboratório, integrando o processamento e a análise de vídeo ao arsenal de ferramentas que atualmente foca primordialmente em imagens estáticas. Tal avanço será suportado pela construção de ferramentas de fácil integração para análise de vídeos, servindo como ponto de entrada para futuras investigações sobre os benefícios deste formato de mídia.
@@ -75,7 +91,7 @@ Os quadros podem ser \emph{key frames}, \emph{inter frames}, \emph{intra-only fr
 
 Para o escopo de visão computacional, três limitações devem ser consideradas. Primeiro, os vetores são definidos por blocos de tamanhos variáveis e podem apontar para referências que não são o quadro imediatamente anterior; a sobreposição deve registrar bloco de origem, bloco de destino, referência e escala temporal. Segundo, áreas ocluídas, regiões sem textura e decisões de taxa-distorção podem produzir vetores descontínuos ou escolhidos para economizar bits, e não para representar o deslocamento real. Terceiro, predição composta e movimento global podem fazer com que um bloco possua mais de uma hipótese de movimento. Consequentemente, a avaliação proposta comparará os vetores extraídos com métodos de \emph{optical flow} e \emph{SfM}, em vez de assumi-los como verdade de referência~\cite{av1motion}.
 
-\section{Objetivos}
+\section{Principais Objetivos}
 
 Este projeto visa proporcionar ao aluno experiência com técnicas modernas de processamento de vídeo digital, decodificação de alta performance utilizando ferramentas como o \emph{FFmpeg}~\cite{ffmpeg}, e análise de dados em visão computacional. O foco central será o desenvolvimento de ferramentas de extração e visualização de dados de vídeos no formato AV1.
 
@@ -107,7 +123,7 @@ Os objetivos específicos incluem:
 
 A figura~\ref{fig:statistics_crop} apresenta um possível produto da ferramenta. Os vetores apresentados indicam uma diferença no comportamento da luz entre o quadro anterior e o atual. Tal campo vetorial é de suma importância para visualização aplicada à reconstrução 3D.
 
-\section{Metodologia}
+\section{Metodologia e Principais Atividades}
 
 A execução do projeto será dividida nas seguintes etapas:
 
